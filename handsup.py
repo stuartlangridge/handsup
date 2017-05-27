@@ -35,7 +35,7 @@ menu = None
 def set_up_pubnub():
     pnconfig.subscribe_key = PUBNUB_SUBSCRIBE_KEY
     pnconfig.publish_key = PUBNUB_PUBLISH_KEY
-    pnconfig.uuid = "%s-%s" % (getpass.getuser(), random.randint(1,1000))
+    pnconfig.uuid = getpass.getuser() #"%s-%s" % (getpass.getuser(), random.randint(1,1000))
     pubnub = PubNub(pnconfig)
     subscribe_listener = SubscribeListener()
     pubnub.add_listener(subscribe_listener)
