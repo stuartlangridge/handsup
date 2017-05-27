@@ -1,0 +1,5 @@
+# get these keys from pubnub.com
+PUBNUB_PUBLISH_KEY="pub-c-XXX"
+PUBNUB_SUBSCRIBE_KEY="sub-c-XXX"
+# choose anything you like here
+CHANNEL_NAME = "MyPodcastName"
