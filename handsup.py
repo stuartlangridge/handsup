@@ -90,7 +90,8 @@ def here_now_cb(result, status):
 def update_people(person_uuid, handup):
     if person_uuid not in PEOPLE:
         mi = gtk.MenuItem(person_uuid)
-        PEOPLE[person_uuid] = ["off", mi]
+        n = notify.Notification.new("", "", "")
+        PEOPLE[person_uuid] = ["off", mi, n]
         menu.append(mi)
     PEOPLE[person_uuid][0] = handup
     if handup == "on":
@@ -110,11 +111,12 @@ def update_people(person_uuid, handup):
         name = "You"
         if handup == "on":
             icon = os.path.abspath("open-yellow.svg")
-    notify.Notification.new("%s put %s hand %s" % (name, their, updown), "", icon).show()
+    PEOPLE[person_uuid][2].update("%s put %s hand %s" % (name, their, updown), "", icon)
+    PEOPLE[person_uuid][2].show()
     hand_state = "closed.svg"
     #print "Checking whether people have their hands up"
     for p, hm in PEOPLE.items():
-        h, m = hm
+        h, m, n = hm
         if h == "on":
             if unicode(p) == unicode(pnconfig.uuid):
                 print "I do, so let's go with a yellow hand, unless anyone else does too"
