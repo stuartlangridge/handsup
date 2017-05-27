@@ -1,5 +1,6 @@
 Simple program which uses pubnub to connect many users together and show whether each one wants to talk. It's for podcast presenters. To indicate you want to talk, turn on Caps Lock. To indicate that you don't want to talk, turn Caps Lock off again.
 
+Copy `config.py.example` to `config.py` and edit it to taste.
 
 You'll need to set up a virtualenv:
 
