@@ -70,6 +70,7 @@ class Handler(SubscribeCallback):
             print "something weird happened", status
  
     def presence(self, pubnub, presence):
+        print "We got a message from", presence.uuid, "and their state is", presence.state
         if presence.state:
             update_people(presence.uuid, presence.state.get("handup", "?"))
 
@@ -112,18 +113,21 @@ def update_people(person_uuid, handup):
     PEOPLE[person_uuid][2].update("%s put %s hand %s" % (name, their, updown), "", icon)
     PEOPLE[person_uuid][2].show()
     hand_state = "closed.svg"
-    #print "Checking whether people have their hands up"
+    print "    Checking whether people have their hands up"
     for p, hm in PEOPLE.items():
         h, m, n = hm
         if h == "on":
             if unicode(p) == unicode(pnconfig.uuid):
-                print "I do, so let's go with a yellow hand, unless anyone else does too"
+                print "    I do, so let's go with a yellow hand, unless anyone else does too"
                 hand_state = "open-yellow.svg"
             else:
-                print p, "does, so it's a green hand icon"
+                print "    ", p, "does, so it's a green hand icon"
                 hand_state = "open-green.svg"
                 break
+    print("    OK, finished checking; we're setting the hand to %s" % (hand_state,))
     indicator.set_icon(os.path.abspath(hand_state))
+
+def sentok(sendresult, status): print("we sent the following state %s" % (sendresult.state,))
 
 def check_caps(pubnub):
     global CAPS_LOCK
@@ -138,8 +142,8 @@ def check_caps(pubnub):
             cl = parts[3]
             if cl != CAPS_LOCK:
                 CAPS_LOCK = cl
-                #print "setting", CAPS_LOCK
-                pubnub.set_state().channels(CHANNEL_NAME).state({"handup": CAPS_LOCK}).sync()
+                print "We have detected a caps lock change: Caps Lock is now", CAPS_LOCK
+                pubnub.set_state().channels(CHANNEL_NAME).state({"handup": CAPS_LOCK}).async(sentok)
     return True
 
 def die(menuitem, pubnub):
